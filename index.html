@@ -1,1 +1,105 @@
-
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            :root {
+                --purple: rgb(85,26,139);
+                --light-purple: #AA8DC5;
+            }
+            #headerRow > div {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                width: auto;
+                /*flex-grow: 1;*/
+                flex-shrink: 1;
+                align-items: center;
+            }
+            #github > a {
+                text-decoration: none;
+                font-weight: bold;
+                color: var(--purple);
+                border: 3px solid var(--purple);
+                padding: .5em;
+                margin: 1%;
+                border-radius: 25px;
+                text-align: center;
+                width: fit-content;
+                height: fit-content;
+                transition: background-color .5s, color .5s;
+            }
+            #github > a:hover {
+                background-color: var(--light-purple);
+                color: white;
+            }
+            #form {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+            #form > div {
+                width: 40%;
+            }
+            #form textarea {
+                width: 100%;
+                height: 40vh;
+            }
+        </style>
+        <script>
+            function parseReference(refString) {
+                let ref = {};
+                ref.sheet = refString.substring(0,refString.indexOf('!'));
+                let remainder = refString.substr(refString.indexOf('!')+1);
+                ref.col = remainder.substring(0,remainder.search(/\d/));
+                ref.row = Number(remainder.substring(remainder.search(/\d/)));
+                return ref;
+            }
+            function refToString(ref) {
+                return ref.sheet + '!' + ref.col + ref.row;
+            }
+            function compareExcelReferences(a, b) {
+                if(a == b) {
+                    return 0;
+                }
+                let aObj = parseReference(a);
+                let bObj = parseReference(b);
+                if(aObj.sheet != bObj.sheet) {
+                    return aObj.sheet.localeCompare(bObj.sheet);
+                }
+                if(aObj.col != bObj.col) {
+                    if(aObj.col.length == bObj.col.length) {
+                        return aObj.col.localeCompare(bObj.col);
+                    }
+                    return aObj.col.length - bObj.col.length;
+                }
+                return aObj.row - bObj.row;
+            }
+            function sortInput(input) {
+                document.getElementById('sorted').value = thing.value.split('\n').sort(compareExcelReferences).join('\n');
+            }
+        </script>
+    </head>
+    <body>
+        <div id="headerRow">
+            <div></div>
+            <div id="header">
+                <center><h1>Excel References Sorter</h1></center>
+                <center><h3>Created by Edmund Pizzarello</h3></center>
+            </div>
+            <div id="github">
+                <a href="https://github.com/epizzarello/ExcelReferencesSorter" target="_blank">GitHub</a>
+            </div>
+        </div>
+        <hr>
+        <form id="form">
+            <div>
+                <center><h3>Unsorted</h3></center>
+                <textarea id="unsorted" autofocus onchange="sortInput(this);"></textarea>
+            </div>
+            <div>
+                <center><h3>Sorted</h3></center>
+                <textarea id="sorted" readonly></textarea>
+            </div>
+        </form>
+    </body>
+</html>
