@@ -51,6 +51,9 @@
                 ref.sheet = refString.substring(0,refString.indexOf('!'));
                 let remainder = refString.substr(refString.indexOf('!')+1);
                 ref.col = remainder.substring(0,remainder.search(/\d/));
+                if(remainder.includes(':')) {
+                    remainder = remainder.substring(0,remainder.search(':'));
+                }
                 ref.row = Number(remainder.substring(remainder.search(/\d/)));
                 return ref;
             }
